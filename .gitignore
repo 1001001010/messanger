@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Environment
+.env
+.env.*
+*.env
+
+# Go
+/bin/
+/dist/
+*.exe
+*.out
+coverage.out
+/vendor/
+
+# Docker/local data
+postgres-data/
+tmp/
+*.log
+
+# Temporary files
+*.tmp
+*.swp
