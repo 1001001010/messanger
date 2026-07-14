@@ -1,10 +1,10 @@
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: social-postgres
+    container_name: messanger-postgres
 
     environment:
-      POSTGRES_DB: social
+      POSTGRES_DB: messanger
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
@@ -14,15 +14,43 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:8-alpine
-    container_name: social-redis
+    container_name: messanger-redis
 
     ports:
       - "6379:6379"
 
     volumes:
       - redis-data:/data
+
+  server:
+    build:
+      context: ./apps/server
+      dockerfile: Dockerfile
+    container_name: messanger-server
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      APP_ENV: docker
+      DB_URL: postgres://postgres:postgres@postgres:5432/messanger?sslmode=disable
+      LOG_LEVEL: debug
+      GRPC_PORT: 50051
+
+    ports:
+      - "50051:50051"
+
+    volumes:
+      - ./apps/server:/app
 
 volumes:
   postgres-data:
