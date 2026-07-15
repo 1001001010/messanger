@@ -20,7 +20,7 @@ func SetupLogger(env string) *slog.Logger {
 		}))
 	case envDev:
 		return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level: slog.LevelDebug,
+			Level: slog.LevelDebug,	
 		}))
 	case envProd:
 		return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{

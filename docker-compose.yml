@@ -52,6 +52,27 @@ services:
     volumes:
       - ./apps/server:/app
 
+  frontend:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: messanger-frontend
+
+    command: pnpm run dev
+
+    ports:
+      - "3000:3000"
+
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+
+    environment:
+      NODE_ENV: development
+
+    depends_on:
+      - server
+
 volumes:
   postgres-data:
   redis-data:

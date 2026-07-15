@@ -11,19 +11,19 @@ import (
 
 func Connect(ctx context.Context, cfg *config.Config, log *slog.Logger) (*pgxpool.Pool, error) {
 	if cfg.DBURL == "" {
-		return nil, fmt.Errorf("Отсутствует URL базы данных в конфигурации")
+		return nil, fmt.Errorf("There is no database URL in the configuration")
 	}
 	pool, err := pgxpool.New(ctx, cfg.DBURL)
 	if err != nil {
-		log.Error("Ошибка создания пула подключения", "error", err)
-		return nil, fmt.Errorf("Ошибка создания пула подключения: %w", err)
+		log.Error("Connection pool creation error", "error", err)
+		return nil, fmt.Errorf("Error creating connection pool: %w", err)
 	}
 	if err := pool.Ping(ctx); err != nil {
 		pool.Close()
-		log.Error("Ошибка подключения к базе данных", "error", err)
-		return nil, fmt.Errorf("Ошибка подключения к базе данных: %w", err)
+		log.Error("Error connecting to the database", "error", err)
+		return nil, fmt.Errorf("Error connecting to the database: %w", err)
 	}
 
-	log.Info("БД успешно подключена")
+	log.Info("Database connected successfully")
 	return pool, nil
 }
