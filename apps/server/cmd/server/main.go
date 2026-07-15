@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/1001001010/messanger/grpc"
+	"github.com/1001001010/messanger/internal/app"
 	"github.com/1001001010/messanger/internal/config"
 	"github.com/1001001010/messanger/internal/database"
 	"github.com/1001001010/messanger/internal/logger"
@@ -32,11 +33,9 @@ func main() {
 		loggerInstance.Error("Error connecting to the db", "error", err)
 		log.Fatalf("Error connecting to the db: %v", err)
 	}
-	defer dbPool.Close()
 
 	// Запускаем gRPC сервер
 	grpcServer := grpc.StartGRPCServer(cfg, loggerInstance)
-	loggerInstance.Info("Server started", "grpc_port", cfg.GRPC.Port)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
@@ -46,7 +45,8 @@ func main() {
 
 	loggerInstance.Info("Shutdown signal received")
 
-	// Корректно останавливаем gRPC сервер
-	grpcServer.GracefulStop()
-	loggerInstance.Info("gRPC server stopped")
+	// Останавливаем gRPC сервер
+	app.ShutdownGRPC(grpcServer, loggerInstance)
+	defer dbPool.Close()
+	loggerInstance.Info("Database connection closed")
 }
