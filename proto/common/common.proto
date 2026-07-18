@@ -3,3 +3,16 @@ syntax = "proto3";
 package common;
 
 option go_package = "github.com/1001001010/Messanger/apps/server/gen/common";
+
+message User {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string first_name = 4;
+  string last_name = 5;
+  string bio = 6;
+  string file_id = 7;
+  bool email_verified = 8;
+  bool is_online = 9;
+  int64 last_seen = 10;
+}

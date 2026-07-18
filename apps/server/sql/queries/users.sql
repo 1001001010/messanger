@@ -1,19 +1,33 @@
 -- name: CreateUser :one
 INSERT INTO users (
-    username,
-    phone_number,
-    password_hash
+    email,
+    password_hash,
+    first_name,
+    last_name
 )
+
 VALUES (
     $1,
     $2,
-    $3
+    $3,
+    $4
 )
 RETURNING *;
-
 
 -- name: GetUserByEmail :one
 SELECT *
 FROM users
-WHERE phone_number = $1
+WHERE email = $1
 LIMIT 1;
+
+-- name: GetUserByID :one
+SELECT *
+FROM users
+WHERE id = $1
+LIMIT 1;
+
+-- name: UpdatePassword :exec
+UPDATE users
+SET password_hash = $2,
+    updated_at = NOW()
+WHERE id = $1;

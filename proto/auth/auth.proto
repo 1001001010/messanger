@@ -2,34 +2,56 @@ syntax = "proto3";
 
 package auth;
 
+import "common/common.proto";
+
 option go_package = "github.com/1001001010/Messanger/apps/server/gen/auth";
+
 
 service AuthService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
+
   rpc Login(LoginRequest) returns (LoginResponse);
+
   rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+
   rpc Logout(LogoutRequest) returns (LogoutResponse);
-  rpc Me(MeRequest) returns (User);
+
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+
+  rpc ResendVerificationEmail(ResendVerificationEmailRequest) returns (ResendVerificationEmailResponse);
+
+  rpc CreateQRCodeLogin(CreateQRCodeLoginRequest) returns (CreateQRCodeLoginResponse);
+
+  rpc ConfirmQRCodeLogin(ConfirmQRCodeLoginRequest) returns (ConfirmQRCodeLoginResponse);
+
+  rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
+
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
 }
 
 message RegisterRequest {
-  string phone_number = 1;
+  string email = 1;
   string password = 2;
+  string first_name = 3;
+  string last_name = 4;
 }
 
 message RegisterResponse {
-  User user = 1;
+  common.User user = 1;
+  bool requires_email_verification = 2;
 }
 
 message LoginRequest {
-  string phone_number = 1;
+  string email = 1;
   string password = 2;
 }
 
 message LoginResponse {
   string access_token = 1;
   string refresh_token = 2;
-  User user = 3;
+  common.User user = 3;
 }
 
 message RefreshTokenRequest {
@@ -49,11 +71,77 @@ message LogoutResponse {
   bool success = 1;
 }
 
-message MeRequest {}
+message VerifyEmailRequest {
+  string email = 1;
+  string code = 2;
+}
 
-message User {
-  string id = 1;
-  string phone_number = 2;
-  string username = 3;
-  string avatar_url = 4;
+enum AuthError {
+  AUTH_ERROR_UNSPECIFIED = 0;
+  INVALID_CODE = 1;
+  EXPIRED_CODE = 2;
+  USER_NOT_FOUND = 3;
+  EMAIL_ALREADY_EXISTS = 4;
+  WRONG_PASSWORD = 5;
+}
+
+message VerifyEmailResponse {
+  bool success = 1;
+  AuthError error = 2;
+}
+
+message ResendVerificationEmailRequest {
+  string email = 1;
+}
+
+
+message ResendVerificationEmailResponse {
+  bool success = 1;
+}
+
+message CreateQRCodeLoginRequest {}
+
+
+message CreateQRCodeLoginResponse {
+  string qr_id = 1;
+  string qr_payload = 2;
+  int64 expires_at = 3;
+}
+
+message ConfirmQRCodeLoginRequest {
+  string qr_token = 1;
+
+  string device_name = 2;
+}
+
+message ConfirmQRCodeLoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message ForgotPasswordRequest {
+  string email = 1;
+}
+
+message ForgotPasswordResponse {
+  bool success = 1;
+}
+
+message ResetPasswordRequest {
+  string email = 1;
+  string code = 2;
+  string new_password = 3;
+}
+
+message ResetPasswordResponse {
+  bool success = 1;
+}
+
+message ChangePasswordRequest {
+  string old_password = 1;
+  string new_password = 2;
+}
+
+message ChangePasswordResponse {
+  bool success = 1;
 }

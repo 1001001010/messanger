@@ -2,4 +2,43 @@ syntax = "proto3";
 
 package user;
 
+import "common/common.proto";
+
 option go_package = "github.com/1001001010/Messanger/apps/server/gen/user";
+
+service UserService {
+  rpc GetMe(GetMeRequest) returns (common.User);
+
+  rpc GetUser(GetUserRequest) returns (common.User);
+
+  rpc UpdateProfile(UpdateProfileRequest) returns (common.User);
+
+  rpc UpdateAvatar(UpdateAvatarRequest) returns (common.User);
+
+  rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse);
+}
+
+message GetMeRequest {}
+
+message GetUserRequest {
+    string user_id = 1;
+}
+
+message UpdateProfileRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string username = 3;
+  string bio = 4;
+}
+
+message UpdateAvatarRequest {
+  string file_id = 1;
+}
+message SearchUsersRequest {
+  string query = 1;
+}
+
+message SearchUsersResponse {
+  repeated common.User users = 1;
+}
+

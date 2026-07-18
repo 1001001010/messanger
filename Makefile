@@ -1,3 +1,5 @@
+.PHONY: up down logs ps proto lint server web
+
 up:
 	docker compose up -d
 
@@ -9,3 +11,15 @@ logs:
 
 ps:
 	docker compose ps
+
+proto:
+	buf generate
+
+lint:
+	buf lint
+
+server:
+	cd apps/server && go run ./cmd/server
+
+web:
+	cd apps/web && pnpm run dev

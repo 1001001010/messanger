@@ -8,12 +8,28 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type PasswordReset struct {
+	ID        pgtype.UUID
+	UserID    pgtype.UUID
+	CodeHash  string
+	ExpiresAt pgtype.Timestamptz
+	Used      pgtype.Bool
+	CreatedAt pgtype.Timestamptz
+}
+
 type User struct {
-	ID           pgtype.UUID
-	Username     string
-	PhoneNumber  string
-	PasswordHash string
-	AvatarUrl    pgtype.Text
-	CreatedAt    pgtype.Timestamptz
-	UpdatedAt    pgtype.Timestamptz
+	ID            pgtype.UUID
+	Username      pgtype.Text
+	Email         string
+	EmailVerified bool
+	PasswordHash  string
+	FirstName     string
+	LastName      pgtype.Text
+	Bio           pgtype.Text
+	AvatarUrl     pgtype.Text
+	LastSeen      pgtype.Timestamptz
+	IsOnline      bool
+	IsDeleted     bool
+	CreatedAt     pgtype.Timestamptz
+	UpdatedAt     pgtype.Timestamptz
 }
