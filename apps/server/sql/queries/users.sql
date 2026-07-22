@@ -2,15 +2,13 @@
 INSERT INTO users (
     email,
     password_hash,
-    first_name,
-    last_name
+    first_name
 )
 
 VALUES (
     $1,
     $2,
-    $3,
-    $4
+    $3
 )
 RETURNING *;
 

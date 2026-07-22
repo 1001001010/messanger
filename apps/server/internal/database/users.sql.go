@@ -15,15 +15,13 @@ const createUser = `-- name: CreateUser :one
 INSERT INTO users (
     email,
     password_hash,
-    first_name,
-    last_name
+    first_name
 )
 
 VALUES (
     $1,
     $2,
-    $3,
-    $4
+    $3
 )
 RETURNING id, username, email, email_verified, password_hash, first_name, last_name, bio, file_id, last_seen, is_online, is_deleted, created_at, updated_at
 `
@@ -32,16 +30,10 @@ type CreateUserParams struct {
 	Email        string
 	PasswordHash string
 	FirstName    string
-	LastName     pgtype.Text
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser,
-		arg.Email,
-		arg.PasswordHash,
-		arg.FirstName,
-		arg.LastName,
-	)
+	row := q.db.QueryRow(ctx, createUser, arg.Email, arg.PasswordHash, arg.FirstName)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -52,7 +44,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.FirstName,
 		&i.LastName,
 		&i.Bio,
-		&i.AvatarUrl,
+		&i.FileID,
 		&i.LastSeen,
 		&i.IsOnline,
 		&i.IsDeleted,
@@ -81,7 +73,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.FirstName,
 		&i.LastName,
 		&i.Bio,
-		&i.AvatarUrl,
+		&i.FileID,
 		&i.LastSeen,
 		&i.IsOnline,
 		&i.IsDeleted,
@@ -110,7 +102,7 @@ func (q *Queries) GetUserByID(ctx context.Context, id pgtype.UUID) (User, error)
 		&i.FirstName,
 		&i.LastName,
 		&i.Bio,
-		&i.AvatarUrl,
+		&i.FileID,
 		&i.LastSeen,
 		&i.IsOnline,
 		&i.IsDeleted,

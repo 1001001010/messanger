@@ -26,7 +26,7 @@ type User struct {
 	FirstName     string
 	LastName      pgtype.Text
 	Bio           pgtype.Text
-	AvatarUrl     pgtype.Text
+	FileID        pgtype.Text
 	LastSeen      pgtype.Timestamptz
 	IsOnline      bool
 	IsDeleted     bool

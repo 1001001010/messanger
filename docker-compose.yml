@@ -56,7 +56,7 @@ services:
     build:
       context: ./apps/web
       dockerfile: Dockerfile
-    container_name: messanger-frontend
+    container_name: frontend
 
     command: pnpm run dev
 
@@ -64,7 +64,7 @@ services:
       - "3000:3000"
 
     volumes:
-      - ./apps/frontend:/app
+      - ./apps/web:/app
       - /app/node_modules
 
     environment:
